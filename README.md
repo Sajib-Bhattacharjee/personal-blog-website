@@ -1,8 +1,11 @@
-# ✍️ TheBlog
 
-<p align="center">
+
+<div align="center">
+
+   # ✍️ TheBlog
+  
   <strong>📖 Stories, Ideas & Inspiration</strong>
-</p>
+</div>
 
 <p align="center">
   A modern, full-featured blog platform built for simplicity and performance.
@@ -192,3 +195,19 @@ This project is open source. Use it for personal or commercial projects.
 <p align="center">
   <strong>✍️ TheBlog</strong> — Built with HTML · CSS · JavaScript · Supabase
 </p>
+
+
+---
+
+## 👨‍💻 About the Author
+
+**Sajib Bhattacharjee**
+MERN Stack Specialist | Full-Stack Web Developer
+
+- 🌐 [Portfolio & Projects](https://github.com/Sajib-Bhattacharjee)
+- 💼 [LinkedIn](https://www.linkedin.com/in/sajib-bhattacharjee-42682a178/)
+- 📧 [Contact Me](mailto:sajibbhattacjarjee2000@gmail.com)
+
+---
+
+<p align="center"><i>Created with ❤️ — 2026 Edition</i></p>
