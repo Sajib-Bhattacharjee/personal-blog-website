@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — TheBlog</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23667eea'/><stop offset='100%25' stop-color='%23f093fb'/></linearGradient></defs><rect width='100' height='100' rx='20' fill='url(%23g)'/><text y='.9em' font-size='75' x='12'>✍</text></svg>">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .admin-wrap { min-height: 100vh; padding-top: 80px; }
+    .admin-card { background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem; overflow-x: auto; }
+    .admin-table { width: 100%; font-size: 0.9rem; }
+    .admin-table th { font-weight: 600; color: var(--text-muted); padding: 0.75rem; border-bottom: 1px solid var(--border-color); }
+    .admin-table td { padding: 0.75rem; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+    .admin-table tr:hover td { background: var(--pill-bg); }
+    .login-box { max-width: 400px; margin: 8rem auto; padding: 2.5rem; background: var(--glass-bg); border: 1px solid var(--border-color); border-radius: var(--radius-xl); }
+    .login-box h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+    .btn-admin { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-weight: 600; }
+    .btn-admin:hover { color: white; opacity: 0.9; }
+    .btn-admin-outline { border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.5rem 1rem; border-radius: var(--radius-sm); }
+    .btn-admin-outline:hover { border-color: #667eea; color: #667eea; }
+    .btn-admin-danger { background: #ff5064; color: white; }
+    .btn-admin-danger:hover { color: white; opacity: 0.9; }
+    #postEditor { display: none; }
+    .editor-preview { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem; min-height: 120px; font-size: 0.9rem; }
+    .nav-tabs-admin .nav-link { color: var(--text-secondary); font-weight: 600; background: transparent; }
+    .nav-tabs-admin .nav-link.active { color: #667eea; border-color: var(--border-color) var(--border-color) var(--bg-primary); background: transparent; }
+    [data-theme="dark"] .nav-tabs-admin .nav-link { color: var(--text-secondary); background: transparent; }
+    [data-theme="dark"] .nav-tabs-admin .nav-link:hover { color: var(--text-primary); }
+    [data-theme="dark"] .nav-tabs-admin .nav-link.active { color: #a78bfa; border-color: var(--border-color) var(--border-color) var(--bg-primary); background: transparent; }
+    .admin-wrap { overflow-x: hidden; }
+    /* Responsive */
+    @media (max-width: 991px) {
+      .admin-wrap { padding-top: 70px; }
+      .admin-card { padding: 1rem; }
+      .admin-table { font-size: 0.85rem; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; min-width: 500px; }
+      .admin-table th, .admin-table td { padding: 0.6rem; white-space: nowrap; }
+    }
+    @media (max-width: 768px) {
+      .admin-wrap { padding-top: 65px; }
+      .login-box { margin: 4rem 1rem; padding: 1.5rem; }
+      .login-box h1 { font-size: 1.25rem; }
+      .navbar .d-flex { flex-wrap: wrap; gap: 0.5rem; }
+      .navbar .btn-admin-outline { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+      .navbar-brand { font-size: 1.1rem; }
+      .nav-tabs-admin { flex-wrap: wrap; }
+      .nav-tabs-admin .nav-link { padding: 0.5rem 0.75rem; font-size: 0.9rem; }
+      #tabPosts .d-flex { flex-direction: column; align-items: stretch; gap: 1rem; text-align: center; }
+      #tabPosts .d-flex .btn-admin { width: 100%; }
+      #postEditor .d-flex.gap-2 { flex-direction: column; }
+      #postEditor .d-flex.gap-2 .form-control { width: 100%; }
+      #postEditor .d-flex.gap-2 .btn-admin-outline { width: 100%; }
+      #postEditor .col-12.d-flex.gap-2 { flex-direction: column; }
+      #postEditor .col-12.d-flex.gap-2 .btn-admin { width: 100%; }
+      #postEditor .col-12.d-flex.gap-2 .btn-admin-outline { width: 100%; }
+      #imagePreview img { max-height: 100px; max-width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .admin-wrap { padding-top: 60px; }
+      .login-box { margin: 2rem 0.75rem; padding: 1.25rem; }
+      .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+      .admin-card { padding: 0.85rem; }
+      .admin-table th, .admin-table td { padding: 0.5rem; font-size: 0.8rem; }
+      .navbar .container { flex-wrap: wrap; }
+      .navbar .d-flex { flex-wrap: wrap; justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="loginScreen" class="login-box">
+  <h1><i class="fas fa-lock" style="color:#667eea;"></i> Admin Login</h1>
+  <p class="text-muted small mb-3">Enter admin password to continue.</p>
+  <form id="loginForm">
+    <div class="mb-3">
+      <input type="password" id="adminPassword" class="form-control" placeholder="Password" required autocomplete="current-password">
+    </div>
+    <button type="submit" class="btn btn-admin w-100">Sign In</button>
+  </form>
+  <p id="loginError" class="text-danger small mt-2" style="display:none;">Invalid password.</p>
+</div>
+
+<!-- Admin Dashboard -->
+<div id="adminDashboard" class="admin-wrap" style="display:none;">
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">TheBlog Admin</a>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-admin-outline btn-sm theme-toggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+        <a href="index.html" class="btn btn-admin-outline btn-sm" target="_blank"><i class="fas fa-external-link-alt"></i> View Site</a>
+        <button class="btn btn-admin-outline btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <ul class="nav nav-tabs nav-tabs-admin mb-4">
+      <li class="nav-item"><a class="nav-link active" href="#" data-tab="posts">Posts</a></li>
+      <li class="nav-item"><a class="nav-link" href="#" data-tab="comments">Comments</a></li>
+      <li class="nav-item"><a class="nav-link" href="#" data-tab="newsletter">Newsletter</a></li>
+    </ul>
+
+    <!-- Posts Tab -->
+    <div id="tabPosts">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 mb-0">Manage Posts</h2>
+        <button class="btn btn-admin" id="newPostBtn"><i class="fas fa-plus"></i> New Post</button>
+      </div>
+      <div class="admin-card">
+        <div id="postsList"><div class="text-center py-4 text-muted"><i class="fas fa-spinner fa-spin"></i> Loading…</div></div>
+      </div>
+    </div>
+
+    <!-- Comments Tab -->
+    <div id="tabComments" style="display:none;">
+      <h2 class="h4 mb-4">Moderate Comments</h2>
+      <div class="admin-card">
+        <div id="commentsList"><div class="text-center py-4 text-muted"><i class="fas fa-spinner fa-spin"></i> Loading…</div></div>
+      </div>
+    </div>
+
+    <!-- Newsletter Tab -->
+    <div id="tabNewsletter" style="display:none;">
+      <h2 class="h4 mb-4">Newsletter Subscribers</h2>
+      <div class="admin-card">
+        <div id="newsletterList"><div class="text-center py-4 text-muted"><i class="fas fa-spinner fa-spin"></i> Loading…</div></div>
+      </div>
+    </div>
+
+    <!-- Post Editor Modal -->
+    <div id="postEditor" class="admin-card mt-4">
+      <h3 class="h5 mb-4" id="editorTitle">New Post</h3>
+      <form id="postForm">
+        <input type="hidden" id="editPostId">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label">Title</label>
+            <input type="text" id="postTitle" class="form-control" required placeholder="Post title">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Category</label>
+            <input type="text" id="postCategory" class="form-control" required placeholder="e.g. Tech, Travel">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Author</label>
+            <input type="text" id="postAuthor" class="form-control" required placeholder="Author name">
+          </div>
+          <div class="col-12">
+            <label class="form-label">Featured Image</label>
+            <div class="d-flex gap-2">
+              <input type="text" id="postImageUrl" class="form-control" placeholder="Image URL or upload below">
+              <label class="btn btn-admin-outline mb-0">
+                <i class="fas fa-upload"></i> Upload
+                <input type="file" id="postImageFile" accept="image/*" style="display:none;">
+              </label>
+            </div>
+            <div id="imagePreview" class="mt-2" style="display:none;"><img src="" alt="Preview" style="max-height:120px; border-radius:8px;"></div>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Content (Markdown supported)</label>
+            <textarea id="postContent" class="form-control" rows="12" placeholder="Write your post content… Markdown: **bold**, *italic*, [link](url), # heading"></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Status</label>
+            <select id="postStatus" class="form-select">
+              <option value="Published">Published</option>
+              <option value="Draft">Draft</option>
+            </select>
+          </div>
+          <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-admin"><i class="fas fa-save"></i> Save Post</button>
+            <button type="button" class="btn btn-admin-outline" id="cancelEdit">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="assets/js/config.js"></script>
+<script>
+  (function initAdminTheme() {
+    const saved = localStorage.getItem('blogTheme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('blogTheme', next);
+        btn.innerHTML = next === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+      });
+      btn.innerHTML = (saved === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>');
+    });
+  })();
+</script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+# ── Netlify Configuration ─────────────────────────────────────
+
+[build]
+  publish = "."
+
+# ── Redirect .html-less URLs to actual files ──────────────────
+[[redirects]]
+  from  = "/blog"
+  to    = "/blog.html"
+  status = 200
+
+[[redirects]]
+  from  = "/post"
+  to    = "/post.html"
+  status = 200
+
+[[redirects]]
+  from  = "/post/*"
+  to    = "/post.html"
+  status = 200
+
+[[redirects]]
+  from  = "/admin"
+  to    = "/admin.html"
+  status = 200
+
+[[redirects]]
+  from  = "/about"
+  to    = "/about.html"
+  status = 200
+
+[[redirects]]
+  from  = "/contact"
+  to    = "/contact.html"
+  status = 200
+
+[[redirects]]
+  from  = "/privacy"
+  to    = "/privacy.html"
+  status = 200
+
+[[redirects]]
+  from  = "/terms"
+  to    = "/terms.html"
+  status = 200
+
+# ── Security & Performance Headers ───────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TheBlog — Stories, Ideas & Inspiration</title>
+  <meta name="description" content="TheBlog — Discover stories, ideas, and inspiration from writers around the world.">
+  <meta property="og:title" content="TheBlog — Stories, Ideas & Inspiration">
+  <meta property="og:description" content="Discover stories, ideas, and inspiration from writers around the world.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&auto=format&fit=crop">
+  <meta name="theme-color" content="#667eea">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="sitemap.xml">
+  <link rel="alternate" type="application/rss+xml" title="TheBlog RSS" href="rss.xml">
+  <!-- Favicon — emoji fallback (no file needed) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23667eea'/><stop offset='100%25' stop-color='%23f093fb'/></linearGradient></defs><rect width='100' height='100' rx='20' fill='url(%23g)'/><text y='.9em' font-size='75' x='12'>✍</text></svg>">
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ── Search Overlay ──────────────────────────────────────── -->
+<div id="searchOverlay" class="search-overlay">
+  <div class="search-overlay-inner">
+    <input type="text" placeholder="Search posts… (press Enter to go to blog)">
+  </div>
+  <button class="search-close" aria-label="Close search"><i class="fas fa-times"></i></button>
+</div>
+
+<!-- ── Navbar ──────────────────────────────────────────────── -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">TheBlog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto align-items-center gap-1">
+        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
+        <li class="nav-item ms-2">
+          <button class="nav-search-btn" aria-label="Search" title="Search (Ctrl+K)">
+            <i class="fas fa-search"></i>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="theme-toggle" aria-label="Toggle theme">
+            <i class="fas fa-moon"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Page Wrapper ────────────────────────────────────────── -->
+<div class="page-wrapper">
+
+  <!-- ── Hero Section ──────────────────────────────────────── -->
+  <section class="hero-section">
+    <div class="hero-bg-orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="orb orb-4"></div>
+    </div>
+    <div class="hero-particles"></div>
+
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+          <div class="hero-content">
+            <div class="hero-badge mt-lg-5">
+              <span class="pulse-dot"></span>
+              Welcome to TheBlog
+            </div>
+            <h1 class="hero-title">
+              Stories That
+              <span class="line-2">Inspire & Connect</span>
+            </h1>
+            <p class="hero-subtitle">
+              Dive into a world of ideas — tech, life, travel, culture, science and beyond. Written by passionate creators for curious minds.
+            </p>
+            <div class="hero-cta-group">
+              <a href="blog.html" class="btn-hero-primary">
+                <span>Explore Posts</span>
+                <i class="fas fa-arrow-right"></i>
+              </a>
+              <a href="#featured" class="btn-hero-secondary">
+                <i class="fas fa-fire"></i>
+                <span>Featured</span>
+              </a>
+            </div>
+            <div class="hero-stats">
+              <div>
+                <div class="hero-stat-num" id="statPosts">0</div>
+                <div class="hero-stat-label">Articles</div>
+              </div>
+              <div>
+                <div class="hero-stat-num" id="statCategories">0</div>
+                <div class="hero-stat-label">Categories</div>
+              </div>
+              <div>
+                <div class="hero-stat-num">100%</div>
+                <div class="hero-stat-label">Free to Read</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 d-none d-lg-block">
+          <div class="hero-image-wrap">
+            <div class="hero-featured-card" id="heroFeaturedCard">
+              <!-- Filled by JS -->
+              <div style="height:280px; background: linear-gradient(135deg,#1a0a3a,#0a1545);"></div>
+              <div class="hero-card-body">
+                <div class="skeleton skeleton-line" style="width:80px; height:18px; margin-bottom:8px;"></div>
+                <div class="skeleton skeleton-line" style="width:90%; height:14px; margin-bottom:6px;"></div>
+                <div class="skeleton skeleton-line" style="width:60%; height:12px;"></div>
+              </div>
+            </div>
+            <div class="floating-badge floating-badge-1">
+              <div class="icon" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;">
+                <i class="fas fa-fire"></i>
+              </div>
+              <div>
+                <div style="font-size:0.78rem; font-weight:700; color:var(--text-primary);">Trending</div>
+                <div style="font-size:0.68rem; color:var(--text-muted);">New posts daily</div>
+              </div>
+            </div>
+            <div class="floating-badge floating-badge-2">
+              <div class="icon" style="background:linear-gradient(135deg,#f093fb,#f5576c);color:white;">
+                <i class="fas fa-heart"></i>
+              </div>
+              <div>
+                <div style="font-size:0.78rem; font-weight:700; color:var(--text-primary);">Community Loved</div>
+                <div style="font-size:0.68rem; color:var(--text-muted);">Join the discussion</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Featured Post ─────────────────────────────────────── -->
+  <section class="section-lg section-bg-1" id="featured">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <div class="section-tag"><i class="fas fa-star"></i> Editor's Pick</div>
+        <h2 class="section-title gradient-text">Featured Post</h2>
+        <p class="section-subtitle">Our top pick — hand-selected for depth, insight, and great writing.</p>
+      </div>
+      <div id="featuredPost" class="animate-on-scroll">
+        <!-- Skeleton placeholder -->
+        <div class="featured-post skeleton-card" style="min-height:500px;">
+          <div class="skeleton" style="position:absolute;inset:0;border-radius:var(--radius-xl);"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Categories Section ────────────────────────────────── -->
+  <section class="section-sm section-bg-2">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <div class="section-tag"><i class="fas fa-layer-group"></i> Browse</div>
+        <h2 class="section-title">Explore by Category</h2>
+      </div>
+      <div id="categoryPills" class="category-pills animate-on-scroll animate-delay-1">
+        <!-- Built by JS -->
+        <div class="skeleton" style="width:90px;height:38px;border-radius:50px;"></div>
+        <div class="skeleton" style="width:70px;height:38px;border-radius:50px;"></div>
+        <div class="skeleton" style="width:80px;height:38px;border-radius:50px;"></div>
+        <div class="skeleton" style="width:75px;height:38px;border-radius:50px;"></div>
+        <div class="skeleton" style="width:85px;height:38px;border-radius:50px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="gradient-divider"></div>
+
+  <!-- ── Latest Posts ───────────────────────────────────────── -->
+  <section class="section-lg section-bg-3">
+    <div class="container">
+      <div class="d-flex align-items-end justify-content-between flex-wrap gap-3 mb-5 animate-on-scroll">
+        <div class="section-header mb-0">
+          <div class="section-tag"><i class="fas fa-bolt"></i> Fresh Content</div>
+          <h2 class="section-title">Latest Posts</h2>
+          <p class="section-subtitle">The newest stories from our writers.</p>
+        </div>
+        <a href="blog.html" class="btn-gradient flex-shrink-0">
+          View All Posts <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+      <div id="latestPostsGrid" class="posts-grid">
+        <!-- Built by JS / skeleton -->
+      </div>
+      <div class="text-center mt-5 animate-on-scroll">
+        <a href="blog.html" class="btn-outline">
+          <i class="fas fa-th-large"></i> See All Articles
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Newsletter CTA ────────────────────────────────────── -->
+  <section class="section-md" style="background: linear-gradient(135deg, #1a0a3a 0%, #0a1545 50%, #1a0523 100%); position: relative; overflow: hidden;">
+    <div style="position:absolute;inset:0; background: radial-gradient(ellipse at 30% 50%, rgba(102,126,234,0.25) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(240,147,251,0.15) 0%, transparent 60%);"></div>
+    <div class="container text-center" style="position:relative;z-index:2;">
+      <div class="animate-on-scroll">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">✨</div>
+        <h2 style="font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; color: white; margin-bottom: 1rem;">
+          Never Miss a Story
+        </h2>
+        <p style="color: rgba(255,255,255,0.65); max-width: 460px; margin: 0 auto 1.5rem; font-size: 1.05rem;">
+          New articles every week. Subscribe to get the latest in your inbox.
+        </p>
+        <form id="newsletterForm" class="d-flex flex-column flex-sm-row gap-2 justify-content-center align-items-center" style="max-width: 420px; margin: 0 auto 1rem;">
+          <input type="email" id="newsletterEmail" class="form-control" placeholder="Your email" required style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.75rem 1rem;">
+          <button type="submit" class="btn-hero-primary flex-shrink-0">
+            <span>Subscribe</span>
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </form>
+        <p id="newsletterMsg" class="small" style="color: rgba(255,255,255,0.5); display: none;"></p>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end .page-wrapper -->
+
+<!-- ── Footer ──────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-brand">TheBlog</div>
+        <p class="footer-desc">
+          Stories, ideas, and inspiration from passionate writers around the world. Free to read, always.
+        </p>
+        <div class="social-links">
+          <a href="https://twitter.com" class="social-btn" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+          <a href="https://facebook.com" class="social-btn" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com" class="social-btn" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+          <a href="https://linkedin.com" class="social-btn" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-6 col-6">
+        <div class="footer-heading">Navigate</div>
+        <div class="footer-links">
+          <a href="index.html" class="footer-link">Home</a>
+          <a href="blog.html" class="footer-link">Blog</a>
+          <a href="blog.html?category=Tech" class="footer-link">Tech</a>
+          <a href="blog.html?category=Life" class="footer-link">Life & Style</a>
+          <a href="about.html" class="footer-link">About</a>
+          <a href="contact.html" class="footer-link">Contact</a>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-6 col-6">
+        <div class="footer-heading">Categories</div>
+        <div class="footer-links">
+          <a href="blog.html?category=Travel" class="footer-link">Travel</a>
+          <a href="blog.html?category=Health" class="footer-link">Health</a>
+          <a href="blog.html?category=Finance" class="footer-link">Finance</a>
+          <a href="blog.html?category=Science" class="footer-link">Science</a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-heading">About</div>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.87rem; line-height:1.7; margin-bottom:1rem;">
+          TheBlog is powered by Supabase — zero servers to manage. Add a row and your post goes live instantly.
+        </p>
+        <div class="footer-links mt-2">
+          <a href="privacy.html" class="footer-link">Privacy Policy</a>
+          <a href="terms.html" class="footer-link">Terms of Service</a>
+        </div>
+        <div class="d-flex align-items-center gap-2 mt-2" style="font-size:0.82rem; color:rgba(255,255,255,0.4);">
+          <i class="fas fa-shield-halved" style="color:#a78bfa;"></i>
+          Fully open source &amp; free
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 TheBlog. Crafted with <i class="fas fa-heart" style="color:#f093fb;"></i></span>
+      <span>Built with HTML · CSS · JavaScript · Supabase</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to Top -->
+<button class="back-to-top" aria-label="Back to top">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<!-- Config & Script -->
+<script src="assets/js/config.js"></script>
+<script src="assets/js/script.js"></script>
+
+<script>
+  // Populated by postsReady event fired from initHomePage() in script.js
+  // No second fetchPosts() call — uses the already-loaded data
+  document.addEventListener('postsReady', (e) => {
+    const posts = e.detail;
+    const cats  = new Set(posts.map(p => p.category));
+    animateCounter('statPosts', posts.length);
+    animateCounter('statCategories', cats.size);
+
+    // Populate hero card with featured post
+    const card = document.getElementById('heroFeaturedCard');
+    if (card && posts.length) {
+      const p        = posts[0];
+      const rt       = readTime(p.description);
+      const catStyle = getCategoryStyle(p.category);
+      card.innerHTML = `
+        <a href="post.html?id=${encodeURIComponent(p.id)}">
+          <img src="${p.imageUrl}" alt="${escapeHtml(p.title)}"
+               style="width:100%;height:240px;object-fit:cover;"
+               onerror="this.src='${CONFIG.DEFAULT_IMAGE}'">
+        </a>
+        <div class="hero-card-body">
+          <a href="post.html?id=${encodeURIComponent(p.id)}">
+            <span class="hero-card-badge" style="${catStyle}">${escapeHtml(p.category)}</span>
+            <div class="hero-card-title">${escapeHtml(p.title)}</div>
+            <div class="hero-card-meta">
+              <span><i class="fas fa-user"></i> ${escapeHtml(p.author)}</span>
+              <span><i class="far fa-clock"></i> ${rt} min</span>
+            </div>
+          </a>
+        </div>
+      `;
+    }
+  });
+
+  function animateCounter(id, target) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let current = 0;
+    const step  = Math.max(1, Math.ceil(target / 30));
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = current;
+      if (current >= target) clearInterval(timer);
+    }, 40);
+  }
+</script>
+</body>
+</html>

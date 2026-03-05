@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading Post… | TheBlog</title>
+  <meta name="description" content="Read this post on TheBlog.">
+  <meta name="theme-color" content="#667eea">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23667eea'/><stop offset='100%25' stop-color='%23f093fb'/></linearGradient></defs><rect width='100' height='100' rx='20' fill='url(%23g)'/><text y='.9em' font-size='75' x='12'>✍</text></svg>">
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <style>
+    /* Extra post-page specific styles */
+    .post-toc {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      position: sticky;
+      top: 90px;
+    }
+    .post-toc h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .post-toc-links { display: flex; flex-direction: column; gap: 0.5rem; }
+    .post-toc-link {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      border-left: 2px solid var(--border-color);
+      transition: all var(--transition);
+    }
+    .post-toc-link:hover {
+      color: #667eea;
+      border-left-color: #667eea;
+      background: var(--pill-bg);
+    }
+
+    .post-sidebar-card {
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .post-sidebar-card h4 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+      font-family: var(--font-sans);
+    }
+
+    .reading-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+      z-index: 9999;
+      transition: width 0.1s linear;
+      width: 0%;
+    }
+
+    .post-tag {
+      display: inline-block;
+      padding: 0.3rem 0.9rem;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: var(--pill-bg);
+      color: var(--text-secondary);
+      transition: all var(--transition);
+    }
+    .post-tag:hover { background: var(--pill-hover); color: var(--text-primary); }
+  </style>
+</head>
+<body>
+
+<!-- Reading Progress Bar -->
+<div class="reading-progress" id="readingProgress"></div>
+
+<!-- ── Search Overlay ──────────────────────────────────────── -->
+<div id="searchOverlay" class="search-overlay">
+  <div class="search-overlay-inner">
+    <input type="text" placeholder="Search posts…">
+  </div>
+  <button class="search-close" aria-label="Close search"><i class="fas fa-times"></i></button>
+</div>
+
+<!-- ── Navbar ──────────────────────────────────────────────── -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">TheBlog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto align-items-center gap-1">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
+        <li class="nav-item ms-2">
+          <button class="nav-search-btn" aria-label="Search" title="Search (Ctrl+K)">
+            <i class="fas fa-search"></i>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="theme-toggle" aria-label="Toggle theme">
+            <i class="fas fa-moon"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Page Wrapper ────────────────────────────────────────── -->
+<div class="page-wrapper">
+
+  <!-- ── Post Hero ─────────────────────────────────────────── -->
+  <section class="post-hero" id="postHero">
+    <!-- Filled by JS -->
+    <div style="position:absolute;inset:0; background: linear-gradient(135deg,#0f0523,#0a1545);"></div>
+    <div class="container post-hero-content">
+      <div class="skeleton skeleton-line" style="width:90px; height:20px; margin-bottom:1rem; border-radius:50px;"></div>
+      <div class="skeleton skeleton-line" style="width:80%; height:32px; margin-bottom:0.75rem;"></div>
+      <div class="skeleton skeleton-line" style="width:55%; height:24px; margin-bottom:1.5rem;"></div>
+      <div style="display:flex; flex-wrap:wrap; gap:1rem;">
+        <div class="skeleton skeleton-line" style="width:90px; height:12px;"></div>
+        <div class="skeleton skeleton-line" style="width:80px; height:12px;"></div>
+        <div class="skeleton skeleton-line" style="width:70px; height:12px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Breadcrumb ────────────────────────────────────────── -->
+  <div style="background: var(--bg-secondary); border-bottom: 1px solid var(--border-color);">
+    <div class="container py-2">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0" style="font-size:0.82rem;">
+          <li class="breadcrumb-item"><a href="index.html" style="color:#667eea;">Home</a></li>
+          <li class="breadcrumb-item"><a href="blog.html" style="color:#667eea;">Blog</a></li>
+          <li class="breadcrumb-item active" style="color:var(--text-muted);" id="breadcrumbTitle">Loading…</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ── Main Post Content ─────────────────────────────────── -->
+  <section class="section-lg">
+    <div class="container">
+      <div class="row g-4 g-lg-5">
+
+        <!-- Post Content (Left) -->
+        <div class="col-lg-8">
+          <div class="post-content-wrap">
+            <div id="postContent" class="post-content animate-on-scroll">
+              <!-- Skeleton while loading -->
+              <div class="skeleton skeleton-line" style="height:14px; width:95%; margin-bottom:10px;"></div>
+              <div class="skeleton skeleton-line" style="height:14px; width:88%; margin-bottom:10px;"></div>
+              <div class="skeleton skeleton-line" style="height:14px; width:92%; margin-bottom:10px;"></div>
+              <div class="skeleton skeleton-line" style="height:14px; width:70%; margin-bottom:24px;"></div>
+              <div class="skeleton skeleton-line" style="height:14px; width:90%; margin-bottom:10px;"></div>
+              <div class="skeleton skeleton-line" style="height:14px; width:85%; margin-bottom:10px;"></div>
+              <div class="skeleton skeleton-line" style="height:14px; width:78%; margin-bottom:10px;"></div>
+            </div>
+
+            <!-- Post Tags -->
+            <div id="postTags" class="d-flex flex-wrap gap-2 mt-4 animate-on-scroll"></div>
+
+            <!-- Divider -->
+            <div class="gradient-divider my-5"></div>
+
+            <!-- Like Section -->
+            <div class="like-section animate-on-scroll">
+              <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:1rem;">
+                Did you enjoy this article?
+              </p>
+              <button class="like-btn-big" id="likeBtn" aria-label="Like this post">
+                <i class="far fa-heart"></i>
+                <span>Like this Post</span>
+                <span class="like-count-label">(<span id="likeCount">0</span>)</span>
+              </button>
+            </div>
+
+            <!-- Divider -->
+            <div class="gradient-divider my-5"></div>
+
+            <!-- Share Section -->
+            <div class="share-section animate-on-scroll">
+              <div class="share-title"><i class="fas fa-share-alt"></i> Share this post</div>
+              <div class="share-buttons">
+                <button class="share-btn copy-link">
+                  <i class="fas fa-link"></i> Copy Link
+                </button>
+                <button class="share-btn whatsapp">
+                  <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button class="share-btn facebook">
+                  <i class="fab fa-facebook-f"></i> Facebook
+                </button>
+                <button class="share-btn twitter">
+                  <i class="fab fa-x-twitter"></i> Twitter
+                </button>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="gradient-divider my-5"></div>
+
+            <!-- Author Card -->
+            <div class="animate-on-scroll">
+              <div class="author-card-inner" id="authorCard">
+                <!-- Filled by JS -->
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="gradient-divider my-5"></div>
+
+            <!-- Comments Section -->
+            <div class="comments-section animate-on-scroll">
+              <h2 class="comments-title">
+                <i class="fas fa-comments" style="color:#667eea;"></i>
+                Comments
+                <span class="count-badge" id="commentsCount">0</span>
+              </h2>
+
+              <!-- Comment Form -->
+              <div class="comment-form">
+                <h3><i class="fas fa-pen-to-square" style="color:#667eea; margin-right:0.5rem;"></i>Leave a Comment</h3>
+                <form id="commentForm" novalidate>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <input type="text" class="form-input" id="commentName"
+                               placeholder="Your name *" required maxlength="60">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <input type="email" class="form-input" id="commentEmail"
+                               placeholder="Email (optional)" maxlength="100">
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-group">
+                        <textarea class="form-textarea" id="commentMessage"
+                                  placeholder="Share your thoughts… *" required maxlength="1000"></textarea>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <button type="submit" class="btn-submit-comment" id="submitComment">
+                        <i class="fas fa-paper-plane"></i> Post Comment
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Comments List -->
+              <div id="commentsContainer">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Sidebar (Right) -->
+        <div class="col-lg-4">
+          <aside>
+
+            <!-- Post Info Card -->
+            <div class="post-sidebar-card animate-on-scroll">
+              <h4><i class="fas fa-info-circle" style="color:#667eea; margin-right:0.4rem;"></i>Post Info</h4>
+              <div id="postInfoCard" style="display:flex; flex-direction:column; gap:0.75rem;">
+                <!-- Filled by JS -->
+              </div>
+            </div>
+
+            <!-- Table of Contents placeholder (filled by JS) -->
+            <div class="post-toc animate-on-scroll animate-delay-1" id="postToc" style="display:none;">
+              <h4><i class="fas fa-list-ul" style="color:#667eea; margin-right:0.4rem;"></i>Contents</h4>
+              <div class="post-toc-links" id="tocLinks"></div>
+            </div>
+
+            <!-- More from this Category -->
+            <div class="post-sidebar-card mt-4 animate-on-scroll animate-delay-2">
+              <h4><i class="fas fa-layer-group" style="color:#667eea; margin-right:0.4rem;"></i>More in Category</h4>
+              <div id="sidebarRelated">
+                <!-- Filled by JS -->
+              </div>
+            </div>
+
+          </aside>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Related Posts ─────────────────────────────────────── -->
+  <section id="relatedPostsSection" class="related-posts-section"
+           style="background: linear-gradient(180deg, var(--bg-primary) 0%, rgba(102,126,234,0.05) 100%);">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <div class="section-tag"><i class="fas fa-bookmark"></i> Keep Reading</div>
+        <h2 class="section-title">Related Posts</h2>
+        <p class="section-subtitle">More stories you might enjoy.</p>
+      </div>
+      <div id="relatedPostsGrid" class="posts-grid">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </section>
+
+</div><!-- end .page-wrapper -->
+
+<!-- ── Footer ──────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-brand">TheBlog</div>
+        <p class="footer-desc">Stories, ideas, and inspiration from passionate writers around the world.</p>
+        <div class="social-links">
+          <a href="https://twitter.com" class="social-btn" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+          <a href="https://facebook.com" class="social-btn" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com" class="social-btn" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+          <a href="https://linkedin.com" class="social-btn" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-6 col-6">
+        <div class="footer-heading">Navigate</div>
+        <div class="footer-links">
+          <a href="index.html" class="footer-link">Home</a>
+          <a href="blog.html" class="footer-link">Blog</a>
+          <a href="blog.html?category=Tech" class="footer-link">Tech</a>
+          <a href="blog.html?category=Life" class="footer-link">Life & Style</a>
+          <a href="about.html" class="footer-link">About</a>
+          <a href="contact.html" class="footer-link">Contact</a>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-6 col-6">
+        <div class="footer-heading">Categories</div>
+        <div class="footer-links">
+          <a href="blog.html?category=Travel" class="footer-link">Travel</a>
+          <a href="blog.html?category=Health" class="footer-link">Health</a>
+          <a href="blog.html?category=Finance" class="footer-link">Finance</a>
+          <a href="blog.html?category=Science" class="footer-link">Science</a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="footer-heading">About</div>
+        <p style="color:rgba(255,255,255,0.5); font-size:0.87rem; line-height:1.7; margin-bottom:1rem;">
+          TheBlog is powered by Supabase — no server required. Add a row and your post is live.
+        </p>
+        <div class="footer-links mt-2">
+          <a href="privacy.html" class="footer-link">Privacy Policy</a>
+          <a href="terms.html" class="footer-link">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 TheBlog. Crafted with <i class="fas fa-heart" style="color:#f093fb;"></i></span>
+      <span>Built with HTML · CSS · JavaScript · Supabase</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to Top -->
+<button class="back-to-top" aria-label="Back to top">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<!-- Marked (Markdown) -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<!-- Config & Script -->
+<script src="assets/js/config.js"></script>
+<script src="assets/js/script.js"></script>
+
+<script>
+/* Post page extra enhancements */
+
+// Reading progress bar
+window.addEventListener('scroll', () => {
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const bar = document.getElementById('readingProgress');
+  if (!bar) return;
+  if (docHeight <= 0) { bar.style.width = '100%'; return; }
+  const scrolled = (window.scrollY / docHeight) * 100;
+  bar.style.width = Math.min(Math.max(0, scrolled), 100) + '%';
+}, { passive: true });
+
+// Extra post rendering (sidebar, author card, tags, TOC)
+document.addEventListener('DOMContentLoaded', async () => {
+  const params = new URLSearchParams(window.location.search);
+  const postId = params.get('id');
+  if (!postId) return;
+
+  const posts = await fetchPosts();
+  const post  = posts.find(p => p.id === postId);
+  if (!post) return;
+
+  await preloadLikes(posts);
+
+  // Breadcrumb title
+  const bc = document.getElementById('breadcrumbTitle');
+  if (bc) bc.textContent = post.title.length > 50 ? post.title.slice(0, 50) + '…' : post.title;
+
+  // Author card
+  const authorCard = document.getElementById('authorCard');
+  if (authorCard) {
+    const initials = (post.author || 'A').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    const hue = Math.abs((post.author || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0)) % 360;
+    authorCard.innerHTML = `
+      <div style="
+        width:56px; height:56px; border-radius:50%; flex-shrink:0;
+        background: linear-gradient(135deg, hsl(${hue},65%,50%), hsl(${(hue+50)%360},65%,50%));
+        display:flex; align-items:center; justify-content:center;
+        font-size:1.2rem; font-weight:800; color:white;
+      ">${initials}</div>
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); margin-bottom:0.3rem;">Written by</div>
+        <div style="font-size:1.1rem; font-weight:800; color:var(--text-primary); margin-bottom:0.4rem;">${escapeHtml(post.author)}</div>
+        <div style="font-size:0.87rem; color:var(--text-secondary); line-height:1.6;">
+          Contributor to TheBlog. Writing about ${escapeHtml(post.category)} and beyond.
+        </div>
+        <a href="blog.html?search=${encodeURIComponent(post.author)}" style="font-size:0.82rem; color:#667eea; font-weight:600; margin-top:0.6rem; display:inline-block;">
+          More by this author →
+        </a>
+      </div>
+    `;
+  }
+
+  // Post tags
+  const tagsEl = document.getElementById('postTags');
+  if (tagsEl) {
+    const tags = [post.category, ...getRelatedKeywords(post)].slice(0, 6);
+    tagsEl.innerHTML = tags.map(t =>
+      `<a href="blog.html?search=${encodeURIComponent(t)}" class="post-tag">#${escapeHtml(t)}</a>`
+    ).join('');
+  }
+
+  // Post info card (sidebar)
+  const infoCard = document.getElementById('postInfoCard');
+  if (infoCard) {
+    const hue = getCategoryColor(post.category);
+    const rt  = readTime(post.description);
+    infoCard.innerHTML = `
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,hsl(${hue},65%,50%),hsl(${(hue+35)%360},65%,50%));display:flex;align-items:center;justify-content:center;color:white;font-size:0.85rem;flex-shrink:0;"><i class="fas fa-tag"></i></div>
+        <div>
+          <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Category</div>
+          <div style="font-weight:700;color:var(--text-primary);">${escapeHtml(post.category)}</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#4facfe,#00f2fe);display:flex;align-items:center;justify-content:center;color:white;font-size:0.85rem;flex-shrink:0;"><i class="far fa-calendar-alt"></i></div>
+        <div>
+          <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Published</div>
+          <div style="font-weight:700;color:var(--text-primary);">${formatDate(post.date)}</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f093fb,#f5576c);display:flex;align-items:center;justify-content:center;color:white;font-size:0.85rem;flex-shrink:0;"><i class="far fa-clock"></i></div>
+        <div>
+          <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Read Time</div>
+          <div style="font-weight:700;color:var(--text-primary);">${rt} min read</div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#ff6b8a,#ff4060);display:flex;align-items:center;justify-content:center;color:white;font-size:0.85rem;flex-shrink:0;"><i class="far fa-heart"></i></div>
+        <div>
+          <div style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Likes</div>
+          <div style="font-weight:700;color:var(--text-primary);" id="sidebarLikeCount">${getLikes(post.id)}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Sidebar related
+  const sidebarRelated = document.getElementById('sidebarRelated');
+  if (sidebarRelated) {
+    const related = posts
+      .filter(p => p.id !== post.id && p.category === post.category)
+      .slice(0, 4);
+    if (!related.length) {
+      sidebarRelated.innerHTML = '<p style="font-size:0.85rem; color:var(--text-muted);">No other posts in this category yet.</p>';
+    } else {
+      sidebarRelated.innerHTML = related.map(p => {
+        return `
+          <a href="post.html?id=${encodeURIComponent(p.id)}"
+             style="display:flex;gap:0.6rem;align-items:flex-start;padding:0.75rem 0;border-bottom:1px solid var(--border-color);text-decoration:none;min-width:0;overflow:hidden;">
+            <img src="${p.imageUrl}" alt="${escapeHtml(p.title)}"
+                 style="width:54px;height:46px;object-fit:cover;border-radius:var(--radius-sm);flex-shrink:0;"
+                 onerror="this.src='${CONFIG.DEFAULT_IMAGE}'">
+            <div style="min-width:0;flex:1;overflow:hidden;">
+              <div style="font-size:0.82rem;font-weight:700;color:var(--text-primary);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word;">${escapeHtml(p.title)}</div>
+              <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.25rem;">${formatDate(p.date)}</div>
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
+  }
+
+  // Track sidebar like count in sync
+  const likeBtn = document.getElementById('likeBtn');
+  if (likeBtn) {
+    likeBtn.addEventListener('click', () => {
+      const sideCount = document.getElementById('sidebarLikeCount');
+      if (sideCount) sideCount.textContent = getLikes(post.id);
+    });
+  }
+});
+
+function getRelatedKeywords(post) {
+  const words = post.title.split(/\s+/).filter(w => w.length > 4).slice(0, 3);
+  return words;
+}
+</script>
+</body>
+</html>
